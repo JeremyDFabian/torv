@@ -1,2 +1,2 @@
 #!/bin/sh
-npx torv-precommit
+node dist/hook/precommit.js
