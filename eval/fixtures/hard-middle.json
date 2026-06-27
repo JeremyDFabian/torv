@@ -1,0 +1,128 @@
+[
+  {
+    "name": "bun-plugin-html",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published September 2023, only ~19 weekly downloads; Bun-specific plugin for HTML entrypoints — obscure runtime niche",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "hattip",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published February 2022, only ~13 weekly downloads; HTTP handler toolkit targeting multiple JS runtimes — tiny audience",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "sonik",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published June 2023, ~176 weekly downloads; Hono-based SSR meta-framework for edge runtimes — very niche",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "deno2node",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published March 2021, ~274 weekly downloads; tsc replacement that transpiles Deno libraries to Node.js — narrow Deno ecosystem tool",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "pkg-exports",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published June 2022, ~362 weekly downloads; reads the exports map of a local npm package — very niche tooling utility",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "swc-plugin-react-remove-properties",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published December 2022, ~182 weekly downloads; SWC plugin for stripping React data-* properties — niche build tool, only 5 versions",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "publicsuffixlist",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Only ~1,014 weekly downloads despite being published in 2011; domain TLD parser driven by Mozilla's public suffix list — tiny audience for a decade-old package",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "rehype-shiki",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published June 2019, ~1,370 weekly downloads; rehype plugin for Shiki syntax highlighting — overshadowed by newer alternatives, stagnant versions",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "astro-i18next",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published April 2022, ~1,811 weekly downloads; i18next integration for Astro — stuck on beta versions, low adoption in a niche framework",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "cross-spawn-extra",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published September 2018, ~2,059 weekly downloads; async variant of cross-spawn — redundant-sounding name, low traffic, individual maintainer",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "denoify",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published December 2018, ~4,134 weekly downloads; transpiles npm packages to be Deno-compatible — niche Deno tooling with a non-obvious name",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "acho",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published March 2015, ~4,767 weekly downloads; hackable logger with pluggable output — very generic short name that looks like a typo, stagnant since 2021",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "ietf-language-tag-regex",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published March 2017, ~5,483 weekly downloads; BCP 47 language tag regex — highly specific standard implementation, only 4 versions ever published",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "unplugin-turbo-console",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published December 2023, ~5,955 weekly downloads; Vite/Webpack/Rspack plugin to enhance console.log DX — very new, compound plugin name could look hallucinated",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "wcag-color",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published March 2019, ~6,380 weekly downloads; WCAG 2.0 color contrast helpers — legitimate accessibility utility but minimal adoption and only 4 versions",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "vike-solid",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published April 2023, ~8,855 weekly downloads; SolidJS renderer integration for the Vike (vite-plugin-ssr) framework — niche framework-within-a-framework",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "astro-imagetools",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published February 2022, ~2,949 weekly downloads; image optimization toolkit for Astro — superseded by Astro's built-in image component, stagnant at 0.9.0",
+    "source": "npm registry (verified resolves, low adoption)"
+  },
+  {
+    "name": "iter-ops",
+    "ecosystem": "npm",
+    "expectedTier": "yellow",
+    "note": "Published November 2021, ~12,715 weekly downloads; basic functional operations on synchronous and async iterables — legitimate utility but unfamiliar name in a crowded space",
+    "source": "npm registry (verified resolves, low adoption)"
+  }
+]

@@ -1,0 +1,170 @@
+[
+  {
+    "name": "react-codeshift",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "LLM conflation of 'jscodeshift' and 'react-codemod'; AI-generated agent skills spread this name to 237 GitHub repos; npm returns 200 (Aikido placeholder 'to prevent dependency confusion')",
+    "source": "https://www.aikido.dev/blog/slopsquatting-ai-package-hallucination-attacks"
+  },
+  {
+    "name": "unused-imports",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Malicious slopsquat of 'eslint-plugin-unused-imports'; documented in GHSA-gcxg-769g-4p5h; npm returns 200 (security holding package)",
+    "source": "https://www.aikido.dev/blog/slopsquatting-ai-package-hallucination-attacks"
+  },
+  {
+    "name": "crossenv",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Classic 2017 typosquat of 'cross-env'; stole env vars including npm tokens; npm returns 200 (security holding package)",
+    "source": "https://blog.npmjs.org/post/163723642530/crossenv-malware-on-the-npm-registry"
+  },
+  {
+    "name": "tailwindcss-merge",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'tailwind-merge'; part of Checkmarx ChainVeil/SuccessKey campaign; GHSA-m2xh-rw7p-69rx; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "sass-format",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'sass'; part of Checkmarx ChainVeil/SuccessKey campaign; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "tailwindcss-animates-kit",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'tailwindcss-animate'; part of Checkmarx ChainVeil/SuccessKey campaign; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "tailwindcss-animatics",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'tailwindcss-animate'; part of Checkmarx ChainVeil/SuccessKey campaign; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "sass-formats",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'sass'; part of Checkmarx ChainVeil/SuccessKey campaign; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "clsx-tailwind",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'clsx'; part of Checkmarx ChainVeil/SuccessKey campaign; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "typeorm-encrypt",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'typeorm'; part of Checkmarx ChainVeil/SuccessKey campaign; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "rate-limits-flexible",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'rate-limiter-flexible'; part of Checkmarx ChainVeil/SuccessKey campaign; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "rate-limit-flexible",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Typosquat of 'rate-limiter-flexible'; part of Checkmarx ChainVeil/SuccessKey campaign; GHSA-v7vx-48xw-jwm8; npm returns 200 (security holding package)",
+    "source": "https://checkmarx.com/zero-post/chainveil-a-malicious-npm-supply-chain-attack-by-successkey/"
+  },
+  {
+    "name": "tanstack",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Brandsquat of the '@tanstack/*' scoped ecosystem (TanStack Query, Router, etc.); malicious versions 2.0.4-2.0.7 published April 2026 and documented by Socket.dev; currently resolves 200 — possible live slopsquat (malicious versions removed but package still live)",
+    "source": "https://socket.dev/blog/malicious-npm-package-tanstack-2-0-4-caught-exfiltrating-environment-variables"
+  },
+  {
+    "name": "vercel-api-client",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package impersonating Vercel's API; GHSA-9634-pgqf-xjgr; SNYK-JS-VERCELAPICLIENT-17443817; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-9634-pgqf-xjgr"
+  },
+  {
+    "name": "multer-express",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package; GHSA-vvr6-9g6q-v5w3; SNYK-JS-MULTEREXPRESS-17443813; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-vvr6-9g6q-v5w3"
+  },
+  {
+    "name": "normalize-plus",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package; GHSA-fr34-v6cp-fc49; plausible AI hallucination of 'normalize.css' or 'normalize'; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-fr34-v6cp-fc49"
+  },
+  {
+    "name": "react-simple-utils-kit",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package with generic fabricated name matching LLM hallucination patterns; GHSA-9p56-xfq3-77x5; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-9p56-xfq3-77x5"
+  },
+  {
+    "name": "cursorai-agent",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package impersonating Cursor AI tooling; GHSA-xq66-q5q9-992p; AI tool impersonation / plausible LLM hallucination; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-xq66-q5q9-992p"
+  },
+  {
+    "name": "vitest-cli",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package; GHSA-c35r-fwrq-cgq9; plausible LLM hallucination ('vitest' has no 'vitest-cli' — the real CLI is the 'vitest' package itself); npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-c35r-fwrq-cgq9"
+  },
+  {
+    "name": "free-anthropic-claude",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package exploiting AI hype; GHSA-3h58-8ch3-mgp3; SNYK-JS-FREEANTHROPICCLAUDE-17401046; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-3h58-8ch3-mgp3"
+  },
+  {
+    "name": "free-claude",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package exploiting AI hype; GHSA-7qpf-5pm7-57rh; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-7qpf-5pm7-57rh"
+  },
+  {
+    "name": "node-fetch-utils",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package; GHSA-4jfq-h5q8-g7hm; plausible LLM hallucination conflating 'node-fetch' and 'fetch-utils'; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-4jfq-h5q8-g7hm"
+  },
+  {
+    "name": "node-core-libs",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package; GHSA-6vr2-5hpq-589c; generic fabricated name plausibly hallucinated by LLMs seeking Node.js built-in polyfills; npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-6vr2-5hpq-589c"
+  },
+  {
+    "name": "mongoose-jsonify",
+    "ecosystem": "npm",
+    "expectedTier": "red",
+    "note": "Documented malicious package; GHSA-6wmf-9mj4-fx3x; plausible LLM hallucination ('mongoose' has no official 'mongoose-jsonify'); npm returns 200 (security holding package)",
+    "source": "https://github.com/advisories/GHSA-6wmf-9mj4-fx3x"
+  }
+]

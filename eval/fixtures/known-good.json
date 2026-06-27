@@ -1,0 +1,205 @@
+[
+  {
+    "name": "react",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-1 download, maintained by Meta, cornerstone of the JS ecosystem",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "lodash",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-5 download, utility library with billions of weekly downloads",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "express",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-10 download, de-facto Node.js web framework since 2010",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "typescript",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-10 download, Microsoft-maintained JS superset",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "vitest",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-100 download, modern Vite-native test framework",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "zod",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-100 download, widely used TypeScript-first schema validation",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "chalk",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, terminal string styling library with long history",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "commander",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, standard CLI argument parsing library",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "axios",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-20 download, promise-based HTTP client with massive adoption",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "eslint",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-10 download, industry-standard JS/TS linter",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "prettier",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-20 download, opinionated code formatter widely adopted across ecosystems",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "webpack",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-10 download, foundational JS bundler with decade-long history",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "vite",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, fast modern build tool maintained by Evan You",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "jest",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-10 download, Meta-maintained JavaScript testing framework",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "babel",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-10 download, JavaScript compiler and transpiler",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "dotenv",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-20 download, ubiquitous .env file loader",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "uuid",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, RFC-compliant UUID generation library",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "moment",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-20 download, mature date manipulation library (legacy but extremely popular)",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "dayjs",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-100 download, lightweight modern alternative to moment",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "cors",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, standard Express CORS middleware",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "body-parser",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-20 download, core Express request body parsing middleware",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "nodemon",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, auto-restarting Node.js dev tool",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "rimraf",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, cross-platform rm -rf utility",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "cross-env",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, cross-platform environment variable setter",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "fs-extra",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, extended Node.js fs module with promise support",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "glob",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-20 download, file path matching with glob patterns",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "inquirer",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-50 download, interactive CLI prompt library",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "tsup",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-100 download, zero-config TypeScript bundler built on esbuild",
+    "source": "npm registry (verified resolves)"
+  },
+  {
+    "name": "esbuild",
+    "ecosystem": "npm",
+    "expectedTier": "green",
+    "note": "top-20 download, extremely fast JavaScript/TypeScript bundler and minifier",
+    "source": "npm registry (verified resolves)"
+  }
+]
