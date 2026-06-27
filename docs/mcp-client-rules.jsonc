@@ -1,0 +1,70 @@
+// torv MCP client rules
+//
+// Paste the relevant section into your MCP client's rules or system-prompt
+// configuration. The JSON structure follows the MCP client-rules convention:
+//   "tools"       — per-tool usage instructions surfaced to the agent
+//   "rules"       — free-text behavioral directives enforced at the client layer
+//
+// Both sections are intentionally redundant: tools[].instructions targets agents
+// that read per-tool docs; rules[] targets agents that scan a top-level directive
+// list. Either alone is sufficient; both together maximise coverage across clients.
+{
+  // -----------------------------------------------------------------------
+  // Tool descriptors
+  // -----------------------------------------------------------------------
+  "tools": [
+    {
+      "name": "verify_dependency",
+
+      // Surface description — shown to the agent as the tool's purpose summary.
+      "description":
+        "Verify the safety of a package before installation. Queries live registry metadata and returns a tiered verdict: green (looks legitimate), yellow (uncertain / fail-closed), or red (strong hallucination or malicious-squatting signal). The verdict includes a per-signal score breakdown and human-readable reasons.",
+
+      // Parameter documentation — mirrors the Zod inputSchema in src/mcp/server.ts.
+      "parameters": {
+        "name": {
+          "type": "string",
+          "description": "Exact package name as it would be passed to the package manager (e.g. 'express', 'requests')."
+        },
+        "ecosystem": {
+          "type": "string",
+          "enum": ["npm", "pypi"],
+          "description": "Registry to query. Use 'npm' for Node/JavaScript packages, 'pypi' for Python packages."
+        },
+        "context": {
+          "type": "string",
+          "optional": true,
+          "description": "Provenance hint. Pass 'found in existing repo import' when the name was read from source code already in the repo; pass 'suggested by agent' when the name was generated fresh. Omit if unknown."
+        }
+      },
+
+      // Instructions — the rule the agent should follow when this tool is available.
+      "instructions":
+        "Call verify_dependency for every new package before running npm install, pip install, or any equivalent package-manager command. A 'new' package is any name not already present in the project's lockfile or requirements file. Do not proceed with the install until the verdict is returned. On a green verdict, proceed. On yellow, inform the user and ask for explicit confirmation before installing. On red, block the install, explain the signal breakdown, and suggest alternatives if possible."
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // Top-level behavioral rules
+  // -----------------------------------------------------------------------
+  "rules": [
+    {
+      "id": "verify-before-install",
+      "severity": "required",
+      "description":
+        "Before calling npm install, pip install, cargo add, go get, gem install, or any other package-manager install command, call verify_dependency for each package name that is new to the project. This applies to direct installs, transitive recommendations you propose, and any package name you generate yourself. Do not skip this step even if the package name looks familiar — hallucinated and slopsquatted names are designed to look plausible."
+    },
+    {
+      "id": "respect-red-verdict",
+      "severity": "required",
+      "description":
+        "A red verdict from verify_dependency is a hard block. Do not install a red-tier package without explicit written confirmation from the user, even if the user's original request implies it."
+    },
+    {
+      "id": "surface-yellow-verdict",
+      "severity": "recommended",
+      "description":
+        "A yellow verdict indicates low confidence or missing registry data (fail-closed default). Surface the reasons to the user and request explicit approval before proceeding."
+    }
+  ]
+}
