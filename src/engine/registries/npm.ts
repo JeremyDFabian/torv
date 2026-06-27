@@ -15,6 +15,8 @@
 export interface RegistryMetadata {
   exists: boolean;
   publishedAt?: string;
+  /** ISO timestamp of the most recent publish/update (npm `time.modified`). */
+  lastUpdate?: string;
   weeklyDownloads?: number;
   versionCount?: number;
 }
@@ -27,6 +29,7 @@ const cache = new Map<string, RegistryMetadata>();
 interface NpmRegistryResponse {
   time?: {
     created?: string;
+    modified?: string;
     downloads?: number;
     [key: string]: unknown;
   };
@@ -70,6 +73,7 @@ export async function fetchNpmMetadata(
     const result: RegistryMetadata = {
       exists: true,
       publishedAt: data.time?.created ?? undefined,
+      lastUpdate: data.time?.modified ?? undefined,
       weeklyDownloads:
         typeof data.time?.downloads === "number"
           ? data.time.downloads
