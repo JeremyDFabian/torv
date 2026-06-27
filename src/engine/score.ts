@@ -6,6 +6,7 @@ import { scoreRegistry } from "./signals/registry.js";
 import { scoreVersions } from "./signals/versions.js";
 import { scoreConflation } from "./signals/conflation.js";
 import { scoreGrounding } from "./signals/grounding.js";
+import { scoreRecency } from "./signals/recency.js";
 
 /**
  * Maps an overall numeric score to a safety tier.
@@ -40,6 +41,7 @@ export async function scorePackage(input: VerifyInput): Promise<Verdict> {
       { signal: "versions",   score: 0.5, reason: failReason },
       { signal: "conflation", score: 0.5, reason: failReason },
       { signal: "grounding",  score: 0.5, reason: failReason },
+      { signal: "recency",    score: 0.3, reason: failReason },
     ];
     return {
       name:      input.name,
@@ -56,6 +58,7 @@ export async function scorePackage(input: VerifyInput): Promise<Verdict> {
   const versionsScore   = await scoreVersions(metadata);
   const conflationScore = scoreConflation(input.name);
   const groundingScore  = await scoreGrounding(input.name, input.context, process.cwd());
+  const recencyScore    = scoreRecency(metadata);
 
   // Build human-readable reasons
   let ageReason: string;
@@ -82,6 +85,7 @@ export async function scorePackage(input: VerifyInput): Promise<Verdict> {
 
   const conflationReason = `conflation distance score ${conflationScore.toFixed(1)}`;
   const groundingReason  = `grounding score ${groundingScore.toFixed(1)}`;
+  const recencyReason    = `recency score ${recencyScore.toFixed(1)}`;
 
   const signals: SignalScore[] = [
     { signal: "age",        score: ageScore,        reason: ageReason },
@@ -90,16 +94,17 @@ export async function scorePackage(input: VerifyInput): Promise<Verdict> {
     { signal: "versions",   score: versionsScore,   reason: versionsReason },
     { signal: "conflation", score: conflationScore, reason: conflationReason },
     { signal: "grounding",  score: groundingScore,  reason: groundingReason },
+    { signal: "recency",    score: recencyScore,    reason: recencyReason },
   ];
 
   const overallScore =
-    (ageScore + adoptionScore + registryScore + versionsScore + conflationScore + groundingScore) / 6;
+    (ageScore + adoptionScore + registryScore + versionsScore + conflationScore + groundingScore + recencyScore) / 7;
 
   return {
     name:      input.name,
     ecosystem: input.ecosystem,
     tier:      scoreToTier(overallScore),
     signals,
-    reasons:   [ageReason, adoptionReason, registryReason, versionsReason, conflationReason, groundingReason],
+    reasons:   [ageReason, adoptionReason, registryReason, versionsReason, conflationReason, groundingReason, recencyReason],
   };
 }
