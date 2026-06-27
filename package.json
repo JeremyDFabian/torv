@@ -8,11 +8,14 @@
     "test": "vitest run",
     "eval": "tsx eval/run-eval.ts",
     "torv": "node dist/cli/index.js",
-    "mcp": "node dist/mcp/server.js"
+    "mcp": "node dist/mcp/server.js",
+    "precommit": "node dist/hook/precommit.js",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@types/node": "^22.0.0",
+    "husky": "^9.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
     "vitest": "^2.0.0",
