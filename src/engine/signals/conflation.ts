@@ -147,6 +147,11 @@ export function bestSimilarity(name: string): BestSimilarityResult {
 export function scoreConflation(packageName: string, _context?: string): number {
   const { similarity } = bestSimilarity(packageName);
 
+  // Exact match (similarity === 1.0) means the candidate IS a popular package,
+  // not a typosquat of one. It must not be penalized — this is what previously
+  // mis-flagged legitimate names like chalk, axios, and commander.
+  if (similarity >= 1.0) return 1.0;
+
   // Below the confidence threshold — do not apply the signal.
   if (similarity < 0.6) return 1.0;
 
