@@ -147,10 +147,23 @@ describe("scoreConflation", () => {
   // ── Exact match to a popular package ─────────────────────────────────────
 
   describe("exact popular package name", () => {
-    it("exact 'react' has similarity 1.0 and returns the most suspicious score 0.1", () => {
+    it("exact 'react' has similarity 1.0 and is NOT penalized — it IS that package, score 1.0", () => {
+      // A name identical to a popular package is the real package, not a squat.
+      // Penalizing it (the old behavior) wrongly flagged chalk/axios/commander.
       const { similarity } = bestSimilarity("react");
       expect(similarity).toBe(1);
-      expect(scoreConflation("react")).toBe(0.1);
+      expect(scoreConflation("react")).toBe(1.0);
+    });
+
+    it("does not penalize other exact popular names (chalk, axios, commander)", () => {
+      expect(scoreConflation("chalk")).toBe(1.0);
+      expect(scoreConflation("axios")).toBe(1.0);
+      expect(scoreConflation("commander")).toBe(1.0);
+    });
+
+    it("still flags a near-clone that is NOT exactly a popular name", () => {
+      // 'reactt' is 0.95+ similar to 'react' but not identical → still suspicious.
+      expect(scoreConflation("reactt")).toBeLessThan(0.5);
     });
   });
 
