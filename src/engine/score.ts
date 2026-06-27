@@ -4,6 +4,8 @@ import { scoreAge } from "./signals/age.js";
 import { scoreAdoption } from "./signals/adoption.js";
 import { scoreRegistry } from "./signals/registry.js";
 import { scoreVersions } from "./signals/versions.js";
+import { scoreConflation } from "./signals/conflation.js";
+import { scoreGrounding } from "./signals/grounding.js";
 
 /**
  * Maps an overall numeric score to a safety tier.
@@ -32,10 +34,12 @@ export async function scorePackage(input: VerifyInput): Promise<Verdict> {
   if (metadata === null) {
     const failReason = "registry lookup failed — cannot verify, defaulting to yellow";
     const signals: SignalScore[] = [
-      { signal: "age",      score: 0.2, reason: failReason },
-      { signal: "adoption", score: 0.3, reason: failReason },
-      { signal: "registry", score: 0,   reason: failReason },
-      { signal: "versions", score: 0.5, reason: failReason },
+      { signal: "age",        score: 0.2, reason: failReason },
+      { signal: "adoption",   score: 0.3, reason: failReason },
+      { signal: "registry",   score: 0,   reason: failReason },
+      { signal: "versions",   score: 0.5, reason: failReason },
+      { signal: "conflation", score: 0.5, reason: failReason },
+      { signal: "grounding",  score: 0.5, reason: failReason },
     ];
     return {
       name:      input.name,
@@ -46,10 +50,12 @@ export async function scorePackage(input: VerifyInput): Promise<Verdict> {
     };
   }
 
-  const ageScore      = await scoreAge(metadata);
-  const adoptionScore = await scoreAdoption(metadata, input.name);
-  const registryScore = await scoreRegistry(metadata);
-  const versionsScore = await scoreVersions(metadata);
+  const ageScore        = await scoreAge(metadata);
+  const adoptionScore   = await scoreAdoption(metadata, input.name);
+  const registryScore   = await scoreRegistry(metadata);
+  const versionsScore   = await scoreVersions(metadata);
+  const conflationScore = scoreConflation(input.name);
+  const groundingScore  = await scoreGrounding(input.name, input.context, process.cwd());
 
   // Build human-readable reasons
   let ageReason: string;
@@ -74,20 +80,26 @@ export async function scorePackage(input: VerifyInput): Promise<Verdict> {
       ? `${metadata.versionCount} versions (score ${versionsScore.toFixed(1)})`
       : `version count unknown (score ${versionsScore.toFixed(1)})`;
 
+  const conflationReason = `conflation distance score ${conflationScore.toFixed(1)}`;
+  const groundingReason  = `grounding score ${groundingScore.toFixed(1)}`;
+
   const signals: SignalScore[] = [
-    { signal: "age",      score: ageScore,      reason: ageReason },
-    { signal: "adoption", score: adoptionScore,  reason: adoptionReason },
-    { signal: "registry", score: registryScore,  reason: registryReason },
-    { signal: "versions", score: versionsScore,  reason: versionsReason },
+    { signal: "age",        score: ageScore,        reason: ageReason },
+    { signal: "adoption",   score: adoptionScore,   reason: adoptionReason },
+    { signal: "registry",   score: registryScore,   reason: registryReason },
+    { signal: "versions",   score: versionsScore,   reason: versionsReason },
+    { signal: "conflation", score: conflationScore, reason: conflationReason },
+    { signal: "grounding",  score: groundingScore,  reason: groundingReason },
   ];
 
-  const overallScore = (ageScore + adoptionScore + registryScore + versionsScore) / 4;
+  const overallScore =
+    (ageScore + adoptionScore + registryScore + versionsScore + conflationScore + groundingScore) / 6;
 
   return {
     name:      input.name,
     ecosystem: input.ecosystem,
     tier:      scoreToTier(overallScore),
     signals,
-    reasons:   [ageReason, adoptionReason, registryReason, versionsReason],
+    reasons:   [ageReason, adoptionReason, registryReason, versionsReason, conflationReason, groundingReason],
   };
 }
