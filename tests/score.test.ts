@@ -10,27 +10,38 @@ const { mockFetcher, mockGetRegistryFetcher } = vi.hoisted(() => {
 });
 
 // Mock the registry factory so scorePackage never hits the network for package
-// metadata.  The signal mocks below give us full numeric control for threshold
-// tests without any real fetch calls.
+// metadata. The signal mocks below give us full numeric control.
 vi.mock("../src/engine/registries/index.js", () => ({
   getRegistryFetcher: mockGetRegistryFetcher,
 }));
 
-vi.mock("../src/engine/signals/age.js",      () => ({ scoreAge:      vi.fn() }));
-vi.mock("../src/engine/signals/adoption.js",  () => ({ scoreAdoption:  vi.fn() }));
-vi.mock("../src/engine/signals/registry.js",  () => ({ scoreRegistry:  vi.fn() }));
-vi.mock("../src/engine/signals/versions.js",  () => ({ scoreVersions:  vi.fn() }));
+vi.mock("../src/engine/signals/age.js",        () => ({ scoreAge:        vi.fn() }));
+vi.mock("../src/engine/signals/adoption.js",   () => ({ scoreAdoption:   vi.fn() }));
+vi.mock("../src/engine/signals/registry.js",   () => ({ scoreRegistry:   vi.fn() }));
+vi.mock("../src/engine/signals/versions.js",   () => ({ scoreVersions:   vi.fn() }));
+vi.mock("../src/engine/signals/conflation.js", () => ({ scoreConflation: vi.fn() }));
+vi.mock("../src/engine/signals/grounding.js",  () => ({ scoreGrounding:  vi.fn() }));
+vi.mock("../src/engine/signals/recency.js",    () => ({ scoreRecency:    vi.fn() }));
+vi.mock("../src/engine/signals/advisory.js",   () => ({ fetchMalwareAdvisory: vi.fn() }));
 
-import { scoreAge }      from "../src/engine/signals/age.js";
-import { scoreAdoption } from "../src/engine/signals/adoption.js";
-import { scoreRegistry } from "../src/engine/signals/registry.js";
-import { scoreVersions } from "../src/engine/signals/versions.js";
-import { scorePackage }  from "../src/engine/score.js";
+import { scoreAge }        from "../src/engine/signals/age.js";
+import { scoreAdoption }   from "../src/engine/signals/adoption.js";
+import { scoreRegistry }   from "../src/engine/signals/registry.js";
+import { scoreVersions }   from "../src/engine/signals/versions.js";
+import { scoreConflation } from "../src/engine/signals/conflation.js";
+import { scoreGrounding }  from "../src/engine/signals/grounding.js";
+import { scoreRecency }    from "../src/engine/signals/recency.js";
+import { fetchMalwareAdvisory } from "../src/engine/signals/advisory.js";
+import { scorePackage }    from "../src/engine/score.js";
 
-const mockScoreAge      = vi.mocked(scoreAge);
-const mockScoreAdoption = vi.mocked(scoreAdoption);
-const mockScoreRegistry = vi.mocked(scoreRegistry);
-const mockScoreVersions = vi.mocked(scoreVersions);
+const mockScoreAge        = vi.mocked(scoreAge);
+const mockScoreAdoption   = vi.mocked(scoreAdoption);
+const mockScoreRegistry   = vi.mocked(scoreRegistry);
+const mockScoreVersions   = vi.mocked(scoreVersions);
+const mockScoreConflation = vi.mocked(scoreConflation);
+const mockScoreGrounding  = vi.mocked(scoreGrounding);
+const mockScoreRecency    = vi.mocked(scoreRecency);
+const mockFetchAdvisory   = vi.mocked(fetchMalwareAdvisory);
 
 /** Metadata for a package with a long track record. */
 const richMetadata: RegistryMetadata = {
@@ -43,23 +54,35 @@ const richMetadata: RegistryMetadata = {
 describe("scorePackage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Default fetcher returns a well-established package; signals produce green.
+    // Default: a well-established package, no advisory; heuristics → green.
     mockFetcher.mockResolvedValue(richMetadata);
     mockScoreAge.mockResolvedValue(0.9);
     mockScoreAdoption.mockResolvedValue(0.95);
     mockScoreRegistry.mockResolvedValue(1.0);
     mockScoreVersions.mockResolvedValue(0.95);
+    mockScoreConflation.mockReturnValue(0.95);
+    mockScoreGrounding.mockResolvedValue(0.95);
+    mockScoreRecency.mockReturnValue(0.95);
+    mockFetchAdvisory.mockResolvedValue("none");
   });
+
+  /** Set all seven heuristic signal mocks to the same value. */
+  function setAllHeuristics(score: number): void {
+    mockScoreAge.mockResolvedValue(score);
+    mockScoreAdoption.mockResolvedValue(score);
+    mockScoreRegistry.mockResolvedValue(score);
+    mockScoreVersions.mockResolvedValue(score);
+    mockScoreConflation.mockReturnValue(score);
+    mockScoreGrounding.mockResolvedValue(score);
+    mockScoreRecency.mockReturnValue(score);
+  }
 
   // ---- Ecosystem routing --------------------------------------------------
 
   describe("ecosystem routing", () => {
-    it("calls getRegistryFetcher with 'npm' for npm packages", async () => {
+    it("calls getRegistryFetcher with the input ecosystem", async () => {
       await scorePackage({ name: "lodash", ecosystem: "npm" });
       expect(mockGetRegistryFetcher).toHaveBeenCalledWith("npm");
-    });
-
-    it("calls getRegistryFetcher with 'pypi' for pypi packages", async () => {
       await scorePackage({ name: "requests", ecosystem: "pypi" });
       expect(mockGetRegistryFetcher).toHaveBeenCalledWith("pypi");
     });
@@ -68,127 +91,182 @@ describe("scorePackage", () => {
       await scorePackage({ name: "lodash", ecosystem: "npm" });
       expect(mockFetcher).toHaveBeenCalledWith("lodash");
     });
+
+    it("queries the advisory database with name and ecosystem", async () => {
+      await scorePackage({ name: "lodash", ecosystem: "npm" });
+      expect(mockFetchAdvisory).toHaveBeenCalledWith("lodash", "npm");
+    });
   });
 
-  // ---- Fail-closed behavior -----------------------------------------------
+  // ---- GATE: documented malware -------------------------------------------
+
+  describe("OSV malware gate", () => {
+    it("forces red when OSV reports whole-package malware, even with perfect heuristics", async () => {
+      // Every heuristic says 'great' — an aged, popular-looking holding package.
+      setAllHeuristics(0.95);
+      mockFetchAdvisory.mockResolvedValue("whole-package");
+      const verdict = await scorePackage({ name: "crossenv", ecosystem: "npm" });
+      expect(verdict.tier).toBe("red");
+    });
+
+    it("includes a malware reason and an advisory signal in the verdict", async () => {
+      mockFetchAdvisory.mockResolvedValue("whole-package");
+      const verdict = await scorePackage({ name: "crossenv", ecosystem: "npm" });
+      expect(verdict.signals.some(s => s.signal === "advisory")).toBe(true);
+      expect(verdict.reasons.some(r => /malware|malicious/i.test(r))).toBe(true);
+    });
+
+    it("the malware gate beats the non-existence gate", async () => {
+      // A name that is both absent AND has a malware record → still red (malware reason wins).
+      mockFetcher.mockResolvedValue({ exists: false });
+      mockFetchAdvisory.mockResolvedValue("whole-package");
+      const verdict = await scorePackage({ name: "evil", ecosystem: "npm" });
+      expect(verdict.tier).toBe("red");
+      expect(verdict.reasons.some(r => /malware|malicious/i.test(r))).toBe(true);
+    });
+  });
+
+  // ---- GATE: non-existence ------------------------------------------------
+
+  describe("non-existence gate", () => {
+    it("forces red when the package does not exist on the registry (404)", async () => {
+      mockFetcher.mockResolvedValue({ exists: false });
+      mockScoreRegistry.mockResolvedValue(0);
+      const verdict = await scorePackage({ name: "totally-made-up-xyzzy", ecosystem: "npm" });
+      expect(verdict.tier).toBe("red");
+      expect(verdict.reasons.some(r => /not found|does not (exist|resolve)/i.test(r))).toBe(true);
+    });
+  });
+
+  // ---- GATE: fail-closed on registry failure ------------------------------
 
   describe("fail-closed: registry returns null", () => {
     beforeEach(() => {
       mockFetcher.mockResolvedValue(null);
     });
 
-    it("returns yellow tier on network failure", async () => {
+    it("returns yellow on a transient registry failure", async () => {
       const verdict = await scorePackage({ name: "unreachable", ecosystem: "npm" });
       expect(verdict.tier).toBe("yellow");
     });
 
-    it("sets degraded signal defaults: age 0.2, adoption 0.3, registry 0, versions 0.5", async () => {
+    it("includes the degradation reason", async () => {
       const verdict = await scorePackage({ name: "unreachable", ecosystem: "npm" });
-      const bySignal = Object.fromEntries(verdict.signals.map(s => [s.signal, s.score]));
-      expect(bySignal["age"]).toBe(0.2);
-      expect(bySignal["adoption"]).toBe(0.3);
-      expect(bySignal["registry"]).toBe(0);
-      expect(bySignal["versions"]).toBe(0.5);
+      expect(verdict.reasons.some(r => /cannot verify|defaulting to yellow/i.test(r))).toBe(true);
     });
 
-    it("includes the degradation reason in the reasons array", async () => {
-      const verdict = await scorePackage({ name: "unreachable", ecosystem: "npm" });
-      expect(verdict.reasons).toContain(
-        "registry lookup failed — cannot verify, defaulting to yellow"
-      );
-    });
-
-    it("does not invoke any signal scorer", async () => {
+    it("does not invoke heuristic scorers when the registry is unreachable", async () => {
       await scorePackage({ name: "unreachable", ecosystem: "npm" });
       expect(mockScoreAge).not.toHaveBeenCalled();
-      expect(mockScoreAdoption).not.toHaveBeenCalled();
-      expect(mockScoreRegistry).not.toHaveBeenCalled();
       expect(mockScoreVersions).not.toHaveBeenCalled();
     });
   });
 
-  // ---- Tier assignment ----------------------------------------------------
+  // ---- version-specific advisory (the axios case) -------------------------
 
-  describe("tier assignment", () => {
-    it("returns green for a well-established package (mean 0.95)", async () => {
-      // Default setup: age 0.9, adoption 0.95, registry 1.0, versions 0.95 → mean 0.95
+  describe("version-specific advisory", () => {
+    it("does NOT gate red — an otherwise-good package stays green", async () => {
+      // axios: high heuristics, but one past compromised-version advisory.
+      mockFetchAdvisory.mockResolvedValue("version-specific");
+      const verdict = await scorePackage({ name: "axios", ecosystem: "npm" });
+      expect(verdict.tier).toBe("green");
+    });
+
+    it("surfaces an informational reason about the flagged versions", async () => {
+      mockFetchAdvisory.mockResolvedValue("version-specific");
+      const verdict = await scorePackage({ name: "axios", ecosystem: "npm" });
+      expect(verdict.reasons.some(r => /version/i.test(r))).toBe(true);
+    });
+  });
+
+  // ---- advisory fail-open -------------------------------------------------
+
+  describe("advisory fail-open (OSV unreachable)", () => {
+    it("falls through to heuristics when the advisory lookup is 'unknown'", async () => {
+      mockFetchAdvisory.mockResolvedValue("unknown");
+      const verdict = await scorePackage({ name: "lodash", ecosystem: "npm" });
+      // Heuristics are all high → green, undisturbed by the OSV outage.
+      expect(verdict.tier).toBe("green");
+    });
+  });
+
+  // ---- Heuristic blend for non-gated packages -----------------------------
+
+  describe("heuristic blend (no gate triggered)", () => {
+    it("returns green for a well-established package", async () => {
       const verdict = await scorePackage({ name: "lodash", ecosystem: "npm" });
       expect(verdict.tier).toBe("green");
       expect(verdict.name).toBe("lodash");
       expect(verdict.ecosystem).toBe("npm");
-      expect(verdict.signals).toHaveLength(4);
-      expect(verdict.reasons).toHaveLength(4);
     });
 
-    it("returns red for a package that does not exist (mean 0.25)", async () => {
-      mockFetcher.mockResolvedValue({ exists: false });
-      mockScoreAge.mockResolvedValue(0.2);
-      mockScoreAdoption.mockResolvedValue(0.3);
-      mockScoreRegistry.mockResolvedValue(0);
-      mockScoreVersions.mockResolvedValue(0.5);
-      // mean = (0.2 + 0.3 + 0 + 0.5) / 4 = 0.25 → red
-      const verdict = await scorePackage({ name: "fake-pkg-xyzzy", ecosystem: "npm" });
-      expect(verdict.tier).toBe("red");
-      const registrySignal = verdict.signals.find(s => s.signal === "registry");
-      expect(registrySignal?.score).toBe(0);
-    });
-
-    it("returns yellow for a recent package with modest activity (mean 0.525)", async () => {
+    it("returns yellow for a recent package with modest activity", async () => {
       mockScoreAge.mockResolvedValue(0.3);
       mockScoreAdoption.mockResolvedValue(0.3);
-      mockScoreRegistry.mockResolvedValue(1.0);
       mockScoreVersions.mockResolvedValue(0.5);
-      // mean = (0.3 + 0.3 + 1.0 + 0.5) / 4 = 0.525 → yellow
+      mockScoreRecency.mockReturnValue(0.3);
+      // age .3, adoption .3, registry 1, versions .5, conflation .95, grounding .95, recency .3
+      // mean ≈ 0.614 → yellow
       const verdict = await scorePackage({ name: "new-modest-pkg", ecosystem: "npm" });
       expect(verdict.tier).toBe("yellow");
     });
-  });
 
-  // ---- Tier thresholds ----------------------------------------------------
-
-  describe("tier thresholds", () => {
-    /** Set all four signal mocks to the same score value. */
-    function setAllSignals(score: number): void {
-      mockScoreAge.mockResolvedValue(score);
-      mockScoreAdoption.mockResolvedValue(score);
-      mockScoreRegistry.mockResolvedValue(score);
-      mockScoreVersions.mockResolvedValue(score);
-    }
-
-    it("mean 0.29999 → red (just below 0.3 threshold)", async () => {
-      setAllSignals(0.29999);
+    it("blend mean just below 0.3 → red", async () => {
+      setAllHeuristics(0.29999);
       const { tier } = await scorePackage({ name: "pkg", ecosystem: "npm" });
       expect(tier).toBe("red");
     });
 
-    it("mean 0.30001 → yellow (just above 0.3 threshold)", async () => {
-      setAllSignals(0.30001);
+    it("blend mean exactly 0.3 → yellow", async () => {
+      setAllHeuristics(0.3);
       const { tier } = await scorePackage({ name: "pkg", ecosystem: "npm" });
       expect(tier).toBe("yellow");
     });
 
-    it("mean 0.3 exactly → yellow (lower bound of yellow range)", async () => {
-      setAllSignals(0.3);
+    it("blend mean just below 0.7 → yellow", async () => {
+      setAllHeuristics(0.69999);
       const { tier } = await scorePackage({ name: "pkg", ecosystem: "npm" });
       expect(tier).toBe("yellow");
     });
 
-    it("mean 0.69999 → yellow (just below 0.7 threshold)", async () => {
-      setAllSignals(0.69999);
-      const { tier } = await scorePackage({ name: "pkg", ecosystem: "npm" });
-      expect(tier).toBe("yellow");
-    });
-
-    it("mean 0.70001 → green (just above 0.7 threshold)", async () => {
-      setAllSignals(0.70001);
+    it("blend mean exactly 0.7 → green", async () => {
+      setAllHeuristics(0.7);
       const { tier } = await scorePackage({ name: "pkg", ecosystem: "npm" });
       expect(tier).toBe("green");
     });
+  });
 
-    it("mean 0.7 exactly → green (lower bound of green range)", async () => {
-      setAllSignals(0.7);
-      const { tier } = await scorePackage({ name: "pkg", ecosystem: "npm" });
-      expect(tier).toBe("green");
+  // ---- Signal wiring & breakdown ------------------------------------------
+
+  describe("signal wiring", () => {
+    it("calls scoreConflation with the package name", async () => {
+      await scorePackage({ name: "lodash", ecosystem: "npm" });
+      expect(mockScoreConflation).toHaveBeenCalledWith("lodash");
+    });
+
+    it("calls scoreGrounding with the package name, context, and cwd", async () => {
+      await scorePackage({ name: "lodash", ecosystem: "npm", context: "found in existing repo import" });
+      expect(mockScoreGrounding).toHaveBeenCalledWith(
+        "lodash",
+        "found in existing repo import",
+        process.cwd(),
+      );
+    });
+
+    it("includes all heuristic signals plus the advisory signal in the breakdown", async () => {
+      const verdict = await scorePackage({ name: "lodash", ecosystem: "npm" });
+      const names = verdict.signals.map(s => s.signal);
+      for (const expected of ["advisory", "age", "adoption", "registry", "versions", "conflation", "grounding", "recency"]) {
+        expect(names).toContain(expected);
+      }
+    });
+
+    it("reflects the mocked conflation and grounding scores", async () => {
+      mockScoreConflation.mockReturnValue(0.6);
+      mockScoreGrounding.mockResolvedValue(0.7);
+      const verdict = await scorePackage({ name: "lodash", ecosystem: "npm" });
+      expect(verdict.signals.find(s => s.signal === "conflation")?.score).toBe(0.6);
+      expect(verdict.signals.find(s => s.signal === "grounding")?.score).toBe(0.7);
     });
   });
 });
