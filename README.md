@@ -8,8 +8,8 @@
 
 <p align="center">
   <!-- These two populate automatically once `torv` is published to npm. -->
-  <a href="https://www.npmjs.com/package/@j2rem1/torv"><img alt="npm version" src="https://img.shields.io/npm/v/@j2rem1/torv.svg?color=cb3837&logo=npm"></a>
-  <a href="https://www.npmjs.com/package/@j2rem1/torv"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@j2rem1/torv.svg?color=cb3837&logo=npm"></a>
+  <a href="https://www.npmjs.com/package/@torvlabs/torv"><img alt="npm version" src="https://img.shields.io/npm/v/@torvlabs/torv.svg?color=cb3837&logo=npm"></a>
+  <a href="https://www.npmjs.com/package/@torvlabs/torv"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@torvlabs/torv.svg?color=cb3837&logo=npm"></a>
   <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <img alt="node" src="https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white">
   <img alt="tests" src="https://img.shields.io/badge/tests-209%20passing-success">
@@ -46,14 +46,14 @@ The core insight: **existence is not trust.** A freshly planted trap package res
 Scan a manifest with zero install:
 
 ```bash
-npx @j2rem1/torv path/to/package.json
-npx @j2rem1/torv path/to/requirements.txt
+npx @torvlabs/torv path/to/package.json
+npx @torvlabs/torv path/to/requirements.txt
 ```
 
 Or install the CLI globally (the command is `torv`):
 
 ```bash
-npm install -g @j2rem1/torv
+npm install -g @torvlabs/torv
 torv path/to/package.json
 ```
 
@@ -123,8 +123,8 @@ The OSV lookup fails *open* — if OSV is down, torv falls back to heuristics ra
 ### CLI — scan a manifest
 
 ```bash
-npx @j2rem1/torv path/to/package.json
-npx @j2rem1/torv path/to/requirements.txt
+npx @torvlabs/torv path/to/package.json
+npx @torvlabs/torv path/to/requirements.txt
 ```
 
 Prints a per-dependency verdict table and a `green / yellow / red` summary. Supports npm (`package.json`) and PyPI (`requirements.txt`).
