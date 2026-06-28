@@ -10,7 +10,7 @@
   <!-- These two populate automatically once `torv` is published to npm. -->
   <a href="https://www.npmjs.com/package/torv"><img alt="npm version" src="https://img.shields.io/npm/v/torv.svg?color=cb3837&logo=npm"></a>
   <a href="https://www.npmjs.com/package/torv"><img alt="npm downloads" src="https://img.shields.io/npm/dm/torv.svg?color=cb3837&logo=npm"></a>
-  <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-GPL--3.0-blue.svg"></a>
+  <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <img alt="node" src="https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white">
   <img alt="tests" src="https://img.shields.io/badge/tests-209%20passing-success">
   <img alt="eval accuracy" src="https://img.shields.io/badge/eval-95.8%25-success">
@@ -185,4 +185,4 @@ Issues and PRs welcome — torv is a security tool, so clear repro steps and eva
 
 ## License
 
-[GPL-3.0-or-later](LICENSE) © Jeremy Fabian
+[MIT](LICENSE) © Jeremy Fabian
