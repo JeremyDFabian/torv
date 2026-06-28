@@ -1,8 +1,43 @@
 {
   "name": "torv",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.1.0",
+  "description": "Stop AI coding agents from installing hallucinated or malicious packages. Verifies a dependency's provenance and reputation before it gets installed — built to catch slopsquatting.",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "supply-chain-security",
+    "slopsquatting",
+    "typosquatting",
+    "malware",
+    "npm",
+    "pypi",
+    "dependency",
+    "mcp",
+    "ai-agents",
+    "pre-commit"
+  ],
+  "homepage": "https://github.com/JeremyDFabian/torv#readme",
+  "bugs": "https://github.com/JeremyDFabian/torv/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeremyDFabian/torv.git"
+  },
+  "author": "Jeremy Fabian",
+  "engines": {
+    "node": ">=18"
+  },
   "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "bin": {
+    "torv": "dist/cli/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
@@ -10,15 +45,18 @@
     "torv": "node dist/cli/index.js",
     "mcp": "node dist/mcp/server.js",
     "precommit": "node dist/hook/precommit.js",
-    "prepare": "husky"
+    "prepublishOnly": "npm run build",
+    "prepare": "husky || true"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@modelcontextprotocol/sdk": "^1.29.0",
     "@types/node": "^22.0.0",
     "husky": "^9.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^2.0.0",
-    "zod": "^4.4.3"
+    "vitest": "^2.0.0"
   }
 }
