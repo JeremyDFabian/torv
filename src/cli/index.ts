@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * torv CLI — verify dependencies listed in a package.json or requirements.txt.
  *
