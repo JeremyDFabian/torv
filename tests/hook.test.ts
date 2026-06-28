@@ -8,13 +8,16 @@ import type { Verdict } from "../src/engine/types.js";
 // Hoist mock factories before any imports so vi.mock closures can reference them.
 // ---------------------------------------------------------------------------
 
-const { mockExecSync } = vi.hoisted(() => {
-  return { mockExecSync: vi.fn<(cmd: string, opts?: unknown) => string>() };
+const { mockExecFileSync } = vi.hoisted(() => {
+  return {
+    mockExecFileSync:
+      vi.fn<(file: string, args?: string[], opts?: unknown) => string>(),
+  };
 });
 
 // Mock child_process so getDiff / gitShowHead never touch a real git repo.
 vi.mock("child_process", () => ({
-  execSync: mockExecSync,
+  execFileSync: mockExecFileSync,
 }));
 
 const { mockScorePackage } = vi.hoisted(() => {
@@ -200,8 +203,8 @@ describe("getDiff (detectNewDeps)", () => {
     tmpDir = mkdtempSync(join(tmpdir(), "torv-hook-diff-"));
 
     // Default: git root is tmpDir; HEAD lookup throws (file not in HEAD).
-    mockExecSync.mockImplementation((cmd: string) => {
-      if (cmd.includes("rev-parse --show-toplevel")) return `${tmpDir}\n`;
+    mockExecFileSync.mockImplementation((_file: string, args: string[] = []) => {
+      if (args.includes("rev-parse")) return `${tmpDir}\n`;
       // git show HEAD:... → file not in HEAD
       throw new Error("fatal: Path not found in HEAD");
     });
@@ -244,10 +247,10 @@ describe("getDiff (detectNewDeps)", () => {
 
       // HEAD only had lodash.
       const headContent = JSON.stringify({ dependencies: { lodash: "^4" } });
-      mockExecSync.mockImplementation((cmd: string) => {
-        if (cmd.includes("rev-parse --show-toplevel")) return `${tmpDir}\n`;
-        if (cmd.includes("git show")) return headContent;
-        throw new Error(`Unexpected command: ${cmd}`);
+      mockExecFileSync.mockImplementation((_file: string, args: string[] = []) => {
+        if (args.includes("rev-parse")) return `${tmpDir}\n`;
+        if (args.includes("show")) return headContent;
+        throw new Error(`Unexpected command: ${args.join(" ")}`);
       });
 
       const newDeps = await getDiff(fp);
@@ -260,10 +263,10 @@ describe("getDiff (detectNewDeps)", () => {
       writeFileSync(fp, content, "utf-8");
 
       // HEAD has the same deps.
-      mockExecSync.mockImplementation((cmd: string) => {
-        if (cmd.includes("rev-parse --show-toplevel")) return `${tmpDir}\n`;
-        if (cmd.includes("git show")) return content;
-        throw new Error(`Unexpected command: ${cmd}`);
+      mockExecFileSync.mockImplementation((_file: string, args: string[] = []) => {
+        if (args.includes("rev-parse")) return `${tmpDir}\n`;
+        if (args.includes("show")) return content;
+        throw new Error(`Unexpected command: ${args.join(" ")}`);
       });
 
       expect(await getDiff(fp)).toEqual([]);
@@ -391,8 +394,8 @@ describe("runHook", () => {
     tmpDir = mkdtempSync(join(tmpdir(), "torv-hook-run-"));
 
     // Simulate all staged files as newly added (not in HEAD).
-    mockExecSync.mockImplementation((cmd: string) => {
-      if (cmd.includes("rev-parse --show-toplevel")) return `${tmpDir}\n`;
+    mockExecFileSync.mockImplementation((_file: string, args: string[] = []) => {
+      if (args.includes("rev-parse")) return `${tmpDir}\n`;
       throw new Error("fatal: Path not found in HEAD");
     });
   });

@@ -12,7 +12,7 @@
 
 import { readFileSync, existsSync, appendFileSync } from "fs";
 import { resolve, relative, basename } from "path";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { fileURLToPath } from "url";
 import { scorePackage } from "../engine/score.js";
 import type { Ecosystem, Verdict } from "../engine/types.js";
@@ -194,14 +194,15 @@ export function parsePyprojectToml(filePath: string): Dep[] {
  */
 export function gitShowHead(absPath: string): string | null {
   try {
-    const gitRoot = execSync("git rev-parse --show-toplevel", {
+    const gitRoot = execFileSync("git", ["rev-parse", "--show-toplevel"], {
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
     }).trim();
 
     const relPath = relative(gitRoot, absPath);
-    // Use object notation (HEAD:path) which is safe for paths with spaces.
-    return execSync(`git show "HEAD:${relPath}"`, {
+    // Pass the path as a discrete argument (no shell) so metacharacters in the
+    // filename cannot be interpreted as commands.
+    return execFileSync("git", ["show", `HEAD:${relPath}`], {
       encoding: "utf-8",
       stdio: ["pipe", "pipe", "pipe"],
     });
@@ -438,8 +439,9 @@ if (isMain) {
 
   if (stagedFiles.length === 0) {
     try {
-      const raw = execSync(
-        "git diff --cached --name-only --diff-filter=ACM",
+      const raw = execFileSync(
+        "git",
+        ["diff", "--cached", "--name-only", "--diff-filter=ACM"],
         { encoding: "utf-8", stdio: ["pipe", "pipe", "pipe"] },
       );
       stagedFiles = raw
