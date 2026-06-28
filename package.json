@@ -1,5 +1,5 @@
 {
-  "name": "torv",
+  "name": "@j2rem1/torv",
   "version": "0.1.0",
   "description": "Stop AI coding agents from installing hallucinated or malicious packages. Verifies a dependency's provenance and reputation before it gets installed — built to catch slopsquatting.",
   "license": "MIT",
