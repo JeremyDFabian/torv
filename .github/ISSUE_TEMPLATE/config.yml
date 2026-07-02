@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability in torv itself
+    url: https://github.com/JeremyDFabian/torv/security/advisories/new
+    about: Please report vulnerabilities in torv privately, not as a public issue.
+  - name: Question or discussion
+    url: https://github.com/JeremyDFabian/torv/discussions
+    about: For usage questions and open-ended discussion.

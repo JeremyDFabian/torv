@@ -1,3 +1,9 @@
 node_modules/
 dist/
 .torv-overrides
+
+# Local development notes and specs — not part of the public repo
+dev-docs/
+
+# Packaged tarballs from `npm pack`
+*.tgz

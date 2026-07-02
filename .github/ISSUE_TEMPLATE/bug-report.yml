@@ -1,0 +1,50 @@
+name: "🐞 Bug report"
+description: A crash, wrong verdict, or broken surface (CLI, MCP, or pre-commit hook).
+title: "[bug] "
+labels: ["bug", "triage"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did torv do, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Exact command(s) and input. Include the manifest or package name if relevant.
+      placeholder: |
+        1. npx @torvlabs/torv path/to/package.json
+        2. ...
+      render: shell
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Which surface?
+      options:
+        - CLI (torv / npx)
+        - MCP (verify_dependency)
+        - pre-commit hook
+        - eval harness
+        - other / not sure
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: torv version
+      description: Output of `npx @torvlabs/torv --version`, or the git commit if building from source.
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Node version (`node -v`) and OS.
+      placeholder: "Node 20.11 / macOS 14"
+    validations:
+      required: true

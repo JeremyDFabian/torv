@@ -7,7 +7,6 @@
 </div>
 
 <p align="center">
-  <!-- These two populate automatically once `torv` is published to npm. -->
   <a href="https://www.npmjs.com/package/@torvlabs/torv"><img alt="npm version" src="https://img.shields.io/npm/v/@torvlabs/torv.svg?color=cb3837&logo=npm"></a>
   <a href="https://www.npmjs.com/package/@torvlabs/torv"><img alt="npm downloads" src="https://img.shields.io/npm/dm/@torvlabs/torv.svg?color=cb3837&logo=npm"></a>
   <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
@@ -181,7 +180,7 @@ Agent-time verification has honest, inherent limits — coverage gaps, edge-case
 
 ## Contributing
 
-Issues and PRs welcome — torv is a security tool, so clear repro steps and eval fixtures for new attack patterns are especially valued. File them at [github.com/JeremyDFabian/torv/issues](https://github.com/JeremyDFabian/torv/issues).
+Issues and PRs welcome — torv is a security tool, so clear repro steps and eval fixtures for new attack patterns are especially valued. See [`CONTRIBUTING.md`](CONTRIBUTING.md) for dev setup and the fixture format, or open an issue with the [new attack pattern](https://github.com/JeremyDFabian/torv/issues/new?template=new-attack-pattern.yml) template.
 
 ## License
 

@@ -1,0 +1,76 @@
+name: "🎯 New attack pattern / fixture"
+description: Report a package torv should flag (or wrongly flags), so it can become an eval fixture.
+title: "[fixture] <package-name>"
+labels: ["fixture", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for strengthening torv's coverage. This form mirrors the shape of an
+        eval fixture (`eval/fixtures/`), so a maintainer can drop it straight in.
+        A **public, citable source** is required — reports without one can't be merged.
+  - type: input
+    id: name
+    attributes:
+      label: Package name
+      description: Exactly as it appears (or would appear) on the registry.
+      placeholder: react-codeshift
+    validations:
+      required: true
+  - type: dropdown
+    id: ecosystem
+    attributes:
+      label: Ecosystem
+      options:
+        - npm
+        - pypi
+    validations:
+      required: true
+  - type: dropdown
+    id: expectedTier
+    attributes:
+      label: Expected verdict tier
+      description: What *should* torv return for this package?
+      options:
+        - "red — malicious / slopsquat / typosquat, block it"
+        - "yellow — legit-but-new / niche, warn"
+        - "green — legitimate, must not be flagged"
+    validations:
+      required: true
+  - type: dropdown
+    id: current
+    attributes:
+      label: What does torv return today?
+      description: Run `npx @torvlabs/torv <name>` if you can. Skip if unknown.
+      options:
+        - "Don't know / haven't run it"
+        - red
+        - yellow
+        - green
+    validations:
+      required: false
+  - type: textarea
+    id: note
+    attributes:
+      label: Why (the fixture note)
+      description: One or two sentences on the attack/legitimacy — conflation origin, what the payload does, registry status, etc.
+      placeholder: "LLM conflation of 'jscodeshift' and 'react-codemod'; npm returns 200 (security holding package)."
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Public reference — advisory (GHSA/CVE), vendor blog, registry page. Required.
+      placeholder: https://www.aikido.dev/blog/slopsquatting-ai-package-hallucination-attacks
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmations
+      options:
+        - label: The source above is public and verifiable.
+          required: true
+        - label: I searched existing issues and fixtures for this package name.
+          required: true
